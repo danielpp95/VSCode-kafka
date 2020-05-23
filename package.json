@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:q.helloWorld"
+		"onCommand:q.helloWorld",
+		"onView:exampleView"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -19,8 +20,25 @@
 				"command": "q.helloWorld",
 				"title": "Hello World"
 			}
-		]
-	},
+		],
+		"viewsContainers": {
+            "activitybar": [
+                {
+                    "icon": "images/kafka.svg",
+                    "id": "kafkaView",
+                    "title": "Kafka"
+                }
+            ]
+        },
+	  	"views": {
+            "kafkaView": [
+                {
+                    "id": "exampleView",
+                    "name": "exampleView"
+                }
+            ]
+		}
+    },
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
