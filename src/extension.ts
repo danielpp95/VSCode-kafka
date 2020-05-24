@@ -2,24 +2,23 @@ import * as vscode from 'vscode';
 
 import { KafkaExplorer } from './explorer/KafkaExplorer';
 import { MessagesExplorer } from './explorer/Messages/MessagesExplorer';
+import { Message } from 'kafka-node';
 
 export function activate(context: vscode.ExtensionContext) {
   var kafkaExplorer = vscode.window.registerTreeDataProvider('KafkaView', new KafkaExplorer());
-	// var kafka = vscode.window.registerTreeDataProvider('', new MessagesExplorer("", undefined));
 
   vscode.commands.registerCommand('kafka_dragon.FetchMessages', async (sender: MessagesExplorer) => {
 		// The code you place here will be executed every time your command is executed
 		var {
-			contextValue,
-			label,
-			topic,
+			topicMetadata,
 			client,
 			AddMessage
 		} = sender;
 		
-		var _client:any = client;
-
-		var admin = _client.admin();
+		client.GetMessages([topicMetadata], (message: Message) => {
+			console.log(message);
+			AddMessage(message);
+		});
 
 		vscode.window.showInformationMessage(`Fetching messages`);
 	});

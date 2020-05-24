@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Message } from 'kafka-node';
+import { Message, OffsetFetchRequest } from 'kafka-node';
 import { TreeItem } from '../TreeItem';
 import { MessageItem } from "./MessageItem";
 import { Kafka } from "../../client/Kafka";
@@ -11,7 +11,7 @@ export class MessagesExplorer extends TreeItem {
     public label = "Messages";
     public messages : Message[] = [];
 
-    constructor(public topic: string, public client: Kafka){
+    constructor(public topicMetadata: OffsetFetchRequest, public client: Kafka){
         super();
     };
 

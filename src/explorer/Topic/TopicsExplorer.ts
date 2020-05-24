@@ -14,10 +14,11 @@ export class TopicsExplorer extends TreeItem {
     constructor(private client: Kafka, private admin: Admin){ super(); }
 
     async getChildren(element: TreeItem): Promise<TreeItem[]> {
-        var topics = await Promise.resolve(this.admin.GetTopics());
+        const topicsMetadata = await Promise.resolve(this.admin.GetTopics());
+        const metadata = Object.values(Object.values(topicsMetadata));
 
-        return topics.map((topic: string) => {
-            return new TopicItem(topic, this.client);
+         return metadata.map((metadata) => {
+            return new TopicItem( metadata[0], this.client);
         });
     }
 }
