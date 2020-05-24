@@ -1,5 +1,5 @@
 {
-	"name": "q",
+	"name": "kafka_dragon",
 	"displayName": "",
 	"description": "",
 	"version": "0.0.1",
@@ -14,10 +14,28 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"viewsWelcome": [
+			{
+				"view": "KafkaView",
+				"contents": "Fetching Kafka..."
+			}
+		],
 		"commands": [
 			{
-				"command": "q.helloWorld",
-				"title": "Hello World"
+				"command": "kafka_dragon.FetchMessages",
+				"title": "Fetch messages",
+				"icon": {
+					"light": "images/play.svg",
+					"dark": "images/play.svg"
+				}
+			},
+			{
+				"command": "kafka_dragon.StopFetchMessages",
+				"title": "Stop fetching",
+				"icon": {
+					"light": "images/stop.svg",
+					"dark": "images/stop.svg"
+				}
 			}
 		],
 		"viewsContainers": {
@@ -36,6 +54,30 @@
 					"name": "KafkaView"
 				}
 			]
+		},
+		"menus": {
+			"view/item/context": [
+				{
+					"command": "kafka_dragon.FetchMessages",
+					"when": "view == KafkaView  && viewItem == MessageExplorer",
+					"group": "inline"
+				},
+				{
+					"command": "kafka_dragon.StopFetchMessages",
+					"when": "view == KafkaView  && viewItem == MessageExplorer",
+					"group": "inline"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "kafka_dragon.FetchMessages",
+					"when": "false"
+				},
+				{
+					"command": "kafka_dragon.StopFetchMessages",
+					"when": "false"
+				}
+			]
 		}
 	},
 	"scripts": {
@@ -48,7 +90,7 @@
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
-		"@types/kafkajs": "^1.9.0",
+		"@types/kafka-node": "^3.0.0",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
 		"@types/vscode": "^1.45.0",
@@ -61,6 +103,6 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"kafkajs": "^1.13.0-beta.21"
+		"kafka-node": "^5.0.0"
 	}
 }

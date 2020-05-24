@@ -7,18 +7,20 @@ export abstract class TreeItem {
     public abstract collapsibleState: vscode.TreeItemCollapsibleState;
     public iconPath?: string | { light: string | vscode.Uri; dark: string | vscode.Uri };
     public description?: string;
+    public command?: vscode.Command;
 
     getTreeItem(): vscode.TreeItem {
-      return {
-          label: this.label,
-          contextValue: this.contextValue,
-          collapsibleState: this.collapsibleState,
-          iconPath: this.iconPath,
-          description: this.description,
-      };
-  }
+        return {
+            label: this.label,
+            contextValue: this.contextValue,
+            collapsibleState: this.collapsibleState,
+            iconPath: this.iconPath,
+            description: this.description,
+            command: this.command
+        };
+    }
 
-  getChildren(element: TreeItem): Promise<TreeItem[]> {
-      return Promise.resolve([]);
-  }
+    getChildren(element: TreeItem): TreeItem[] | Promise<TreeItem[]> {
+        return [];
+    }
 }

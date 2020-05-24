@@ -1,30 +1,35 @@
-import {
-    Kafka as kafkaJs,
-    Admin as AdminJs
-} from 'kafkajs';
-
+var KafkaNode = require('kafka-node');
+import { Message, KafkaClient } from 'kafka-node';
 import { Kafka } from './Kafka';
 
 export class Admin {
-    private static instance: AdminJs;
-    private kafka: kafkaJs;
+    private kafka: KafkaClient;
 
     constructor() {
         this.kafka = new Kafka().Instance;
-        Admin.instance = this.kafka.admin();
     }
 
     get Instance() {
-        return Admin.instance;
+        return KafkaNode.Admin(this.kafka);
     }
 
-    public async GetTopics(): Promise<string[]> {
-        return await Admin.instance.listTopics();
-    }
+    public  GetTopics(): Promise<string[]> {
+        var topics: string[] = [];
 
-    public Initialize() {
-        if (Admin.instance === undefined) {
-            Admin.instance = this.kafka.admin();
-        }
+        var instance = new KafkaNode.Admin(this.kafka);
+
+        var promise = new Promise<string[]>(function(resolve, reject) {
+            instance.listTopics(async (err:any, res:any) => {
+                if (err) {
+                    reject(err);
+                }
+
+                var metadata = await res[1].metadata;
+                topics = Object.keys(metadata);
+                resolve(topics);
+            });
+        });
+
+        return promise;
     }
 }
