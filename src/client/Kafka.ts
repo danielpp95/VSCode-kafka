@@ -1,5 +1,9 @@
 import { Disposable } from 'vscode';
-import { KafkaClient, Consumer, OffsetFetchRequest, Message } from 'kafka-node';
+import {
+    KafkaClient,
+    Consumer,
+    OffsetFetchRequest,
+    Message } from 'kafka-node';
 
 export class Kafka implements Disposable {
     private static instance: KafkaClient;
@@ -10,13 +14,20 @@ export class Kafka implements Disposable {
         return Kafka.instance;
     }
 
-    public Initialize(brokers: string) {
+    constructor(brokers?: string) {
+        if (brokers) {
+            this.Initialize(brokers);
+        }
+    }
+
+    private Initialize(brokers: string): Kafka {
         if (Kafka.instance === undefined) {
             Kafka.instance = new KafkaClient({
                 clientId: 'KafkaDragon',
                 kafkaHost: brokers
             });
         }
+        return this;
     }
 
     public GetMessages(

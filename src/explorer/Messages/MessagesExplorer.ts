@@ -2,34 +2,36 @@ import * as vscode from "vscode";
 import { Message, OffsetFetchRequest } from 'kafka-node';
 import { TreeItem } from '../TreeItem';
 import { MessageItem } from "./MessageItem";
-import { Kafka } from "../../client/Kafka";
 
-export class MessagesExplorer extends TreeItem {
+export class MessagesExplorer implements vscode.TreeDataProvider<TreeItem> {
     public contextValue = "MessageExplorer";
     public collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
     public command?: vscode.Command | undefined;
     public label = "Messages";
-    public messages : Message[] = [];
+    public messages : Message[];
+    
+    constructor(public topicMetadata: OffsetFetchRequest){
+        this.messages = [];
+    }
+    
+    private _onDidChangeTreeData: vscode.EventEmitter<TreeItem | undefined> = new vscode.EventEmitter<TreeItem | undefined>();
+    readonly onDidChangeTreeData: vscode.Event<TreeItem | undefined> = this._onDidChangeTreeData.event;
 
-    constructor(public topicMetadata: OffsetFetchRequest, public client: Kafka){
-        super();
-    };
+    public refresh(): void {
+        this._onDidChangeTreeData.fire(undefined);
+    }
+    
+    getTreeItem(element: TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+        return element;
+    }
 
-    getChildren(element?: TreeItem|undefined): TreeItem[] | Promise<TreeItem[]> {
-        if (element === undefined) {
-            return this.getGroupMessages();
-        }
-
-        if (this.messages.length > 0) {
-            return element.getChildren(element);
-        }
-
-        return [];
+    async getChildren(element?: TreeItem|undefined): Promise<TreeItem[]> {
+        return this.getGroupMessages();
     }
 
     public AddMessage(message: Message): void {
-        this.messages.push(message);
-        this.getChildren();
+        this.messages = this.messages.concat(message);
+        this.refresh();
     }
 
     private getGroupMessages(): TreeItem[] {
@@ -38,7 +40,7 @@ export class MessagesExplorer extends TreeItem {
         }
         
         return this.messages.map(message => {
-            return new MessageItem(message, message.value.toString());
+            return new MessageItem(message);
         });
     }
 }

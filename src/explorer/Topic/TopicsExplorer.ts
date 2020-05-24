@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { TreeItem } from '../TreeItem';
 import { TopicItem } from "./TopicItem";
-import { Kafka } from "../../client/Kafka";
 import { Admin } from "../../client/Admin";
 
 
@@ -11,14 +10,14 @@ export class TopicsExplorer extends TreeItem {
     public contextValue: string = "Topics";
     public collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
 
-    constructor(private client: Kafka, private admin: Admin){ super(); }
+    constructor(private admin: Admin){ super(); }
 
     async getChildren(element: TreeItem): Promise<TreeItem[]> {
         const topicsMetadata = await Promise.resolve(this.admin.GetTopics());
         const metadata = Object.values(Object.values(topicsMetadata));
 
          return metadata.map((metadata) => {
-            return new TopicItem( metadata[0], this.client);
+            return new TopicItem( metadata[0]);
         });
     }
 }

@@ -1,19 +1,13 @@
 import * as vscode from 'vscode';
 
-import { Kafka } from '../client/Kafka';
 import { Admin } from '../client/Admin';
 import { TreeItem } from './TreeItem';
-
 import { TopicsExplorer } from './Topic/TopicsExplorer';
 
 export class KafkaExplorer implements vscode.TreeDataProvider<TreeItem> {
-    private kafka:Kafka;
     private admin:Admin;
 
     constructor() {
-        this.kafka = new Kafka();
-        this.kafka.Initialize('localhost:9092');
-        
         this.admin = new Admin();
     }
 
@@ -30,7 +24,7 @@ export class KafkaExplorer implements vscode.TreeDataProvider<TreeItem> {
 
     private getGroupChildren(): TreeItem[] {
         return [
-            new TopicsExplorer(this.kafka, this.admin),
+            new TopicsExplorer(this.admin),
         ];
     }
 }

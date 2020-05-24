@@ -1,19 +1,17 @@
 var KafkaNode = require('kafka-node');
-import { KafkaClient } from 'kafka-node';
 import { Kafka } from './Kafka';
 
 export class Admin {
     private static instance: any;
-    private kafka: KafkaClient;
 
     constructor() {
-        this.kafka = new Kafka().Instance;
-        Admin.instance = new KafkaNode.Admin(this.kafka);
+        var kafka = new Kafka().Instance;
+        Admin.instance = new KafkaNode.Admin(kafka);
     }
 
     public Initialize(brokers: string) {
         if (Admin.instance === undefined) {
-            Admin.instance = new KafkaNode.Admin(this.kafka);
+            Admin.instance = new KafkaNode.Admin(new Kafka().Instance);
         }
     }
 

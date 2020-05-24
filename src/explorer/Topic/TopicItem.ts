@@ -9,14 +9,14 @@ export class TopicItem extends TreeItem {
     public collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
     public command?: vscode.Command | undefined;
 
-    constructor(private topicMetadata: OffsetFetchRequest, private client: Kafka){
+    constructor(private topicMetadata: OffsetFetchRequest){
         super();
         this.label = topicMetadata.topic || 'internalError';
     }
 
-    getChildren(): TreeItem[] {
+    getChildren(): TreeItem[] | any {
         return [
-            new MessagesExplorer(this.topicMetadata, this.client)
+            new MessagesExplorer(this.topicMetadata)
         ];
     }
 }
